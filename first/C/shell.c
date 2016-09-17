@@ -96,7 +96,7 @@ void list_jobs(struct job_t *jobs);
 void usage(void);   //usage是用法的意思(for -h命令行参数)
 void unix_error(char *msg);
 void app_error(char *msg);
-typedef void handler_t(int);   //将void定义为handler_t
+typedef void handler_t(int);    //将void定义为handler_t
 handler_t *Signal(int signum, handler_t *handler);
 void Kill(pid_t pid, int signum);
 
