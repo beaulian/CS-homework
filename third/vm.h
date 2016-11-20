@@ -23,16 +23,19 @@
 #define USE_TLB 1
 
 //TLB size
-#define TLB_SIZE 6
+#define TLB_SIZE 7
 
 //access memory time
-#define AMT 200
+#define AMT 100
 
 //access TLB time
 #define ATT 20
 
 //simulation number
 #define SIM_NUM 30
+
+//flag
+#define FLAG 100000
 
 //init page table
 void init_pt(int *pt, int len)
@@ -55,14 +58,14 @@ void init_tlb(int *tlb, int len, int *pt, int pt_len)
 {
   int m;
   for (m=0; m<pt_len; m++)
-    tlb[m] = 100;
+    tlb[m] = FLAG;
 
   int i, j, a;
   for (i=0; i<len; i++) {
     a = rand() % pt_len;
-    if (tlb[a] != 100) {
-      continue;
+    if (tlb[a] != FLAG) {
       i--;
+      continue;
     }
     tlb[a] = pt[a];
   }
@@ -76,15 +79,17 @@ void print_pt(int *pt, int len)
     printf("%d %d\n", i, pt[i]);
 }
 
+//print tlb
 void print_tlb(int *tlb, int len)
 {
   int i;
   for (i=0; i<len; i++) {
-    if (tlb[i] != 100)
+    if (tlb[i] != FLAG)
       printf("%d %d\n", i, tlb[i]);
   }
 }
 
+//generate virtual address
 int gen_virtual_addr(pt_len)
 {
   int addr;

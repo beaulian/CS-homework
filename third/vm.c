@@ -3,6 +3,7 @@
 int main()
 {
   srand(time(NULL));
+
   int len = (int)pow(2, PPN);
   int page_table[len], tlb[len];
   init_pt(page_table, len);
@@ -13,6 +14,8 @@ int main()
   printf("$");
   scanf("%d", &count);
   int temp_count = count;
+  float total_tlb_hit = 0, total_access_time = 0;
+
   while(count-- > 0) {
     float access_time = 0;
     float tlb_hit = 0;
@@ -25,7 +28,7 @@ int main()
       int vpo = addr & 0x00fff;
       if (USE_TLB) {
         access_time += ATT;
-        if (tlb[vpn] != 100) {
+        if (tlb[vpn] != FLAG) {
           ppn = tlb[vpn];
           ppo = vpo;
           access_time += AMT;
@@ -42,7 +45,14 @@ int main()
       }
       // printf("physical address: %d\n", (ppn << P) +ppo);
     }
-    printf("average access time: %.1f\n\n", access_time / SIM_NUM);
-    printf("tlb hit: %.1f%%\n", (tlb_hit / SIM_NUM)*100);
+    float average_access_time = access_time / SIM_NUM;
+    float average_tlb_hit = (tlb_hit / SIM_NUM)*100;
+    total_tlb_hit += average_tlb_hit;
+    total_access_time += average_access_time;
+    printf("average access time: %.1f\n", average_access_time);
+    printf("tlb hit: %.1f%%\n", average_tlb_hit);
   }
+  printf("\n========================\n");
+  printf("total average access time: %.0f\n", total_access_time / temp_count);
+  printf("total average tlb hit: %.0f%%\n", total_tlb_hit / temp_count);
 }
